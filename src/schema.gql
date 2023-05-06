@@ -1,0 +1,93 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthOutput {
+  access_token: String!
+}
+
+input CreateCvInput {
+  age: Int!
+  cin: String!
+  firstname: String!
+  job: String!
+  name: String!
+  path: String!
+  skills: [String!] = []
+}
+
+input CreateSkillInput {
+  designation: String!
+}
+
+type CvEntity {
+  age: Int!
+  cin: String!
+  firstname: String!
+  id: Int!
+  job: String!
+  name: String!
+  path: String!
+  skills: [SkillEntity!]
+  user: UserEntity
+}
+
+type DeleteOutput {
+  affected: Int!
+  ok: Boolean!
+}
+
+input LoginUserInput {
+  password: String!
+  username: String!
+}
+
+type Mutation {
+  createCv(createCvInput: CreateCvInput!): CvEntity!
+  createSkill(createSkillInput: CreateSkillInput!): SkillEntity!
+  deleteCv(id: Int!): DeleteOutput!
+  deleteSkill(id: Int!): DeleteOutput!
+  registerUser(registerUserInput: RegisterUserInput!): UserEntity!
+  updateCv(updateCvInput: UpdateCvInput!): CvEntity!
+  updateSkill(updateSkillInput: UpdateSkillInput!): SkillEntity!
+}
+
+type Query {
+  cv(id: Int!): CvEntity!
+  cvs: [CvEntity!]!
+  login(loginUserInput: LoginUserInput!): AuthOutput!
+  skill(id: Int!): SkillEntity!
+  skills: [SkillEntity!]!
+  user(id: Int!): UserEntity!
+  users(ids: [Int!]!): [UserEntity!]!
+}
+
+input RegisterUserInput {
+  email: String!
+  password: String!
+  username: String!
+}
+
+type SkillEntity {
+  cvs: [CvEntity!]!
+  designation: String!
+  id: Int!
+}
+
+input UpdateCvInput {
+  id: Int!
+}
+
+input UpdateSkillInput {
+  id: Int!
+}
+
+type UserEntity {
+  cvs: [CvEntity!]!
+  email: String!
+  id: Int!
+  password: String!
+  role: String!
+  salt: String!
+  username: String!
+}
