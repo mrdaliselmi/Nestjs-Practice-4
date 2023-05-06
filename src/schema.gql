@@ -74,6 +74,10 @@ type SkillEntity {
   id: Int!
 }
 
+type Subscription {
+  cvAdded: CvEntity!
+}
+
 input UpdateCvInput {
   id: Int!
 }

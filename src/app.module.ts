@@ -36,6 +36,7 @@ dotenv.config();
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
+      installSubscriptionHandlers: true,
     })
     ,
     CvModule,

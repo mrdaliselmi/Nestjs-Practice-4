@@ -1,5 +1,5 @@
 import { UseGuards } from "@nestjs/common";
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, Mutation, Query, Resolver, Subscription } from "@nestjs/graphql";
 import { DeleteOutput } from "src/common/delete.output";
 import { CvService } from "src/cv/cv.service";
 import { GetCvArgs } from "src/cv/dto/args/get-cv.args";
@@ -19,7 +19,6 @@ export class CvResolver{
     async cvs(
         @User() user
     ){
-        console.log("user",user);
         return await this.cvService.findAll(user);
     }
     // GET ONE CV
@@ -59,6 +58,12 @@ export class CvResolver{
         @User() user
     ){
         return await this.cvService.remove(getCvArgs, user);
+    }
+
+    // SUBSCRIPTION CV ADDED
+    @Subscription(()=>CvEntity)
+    cvAdded(){
+        return this.cvService.cvAdded();
     }
 
 }

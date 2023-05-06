@@ -9,12 +9,11 @@ import { CreateCvInput } from './dto/input/create-cv.input';
 import { UpdateCvInput } from './dto/input/update-cv.input';
 import { UserService } from 'src/user/user.service';
 import { UserRole } from 'src/common/user-role.enum';
+import { PubSub } from 'graphql-subscriptions';
 
+const pubSub = new PubSub();
 @Injectable()
 export class CvService {
-
-
-
   constructor(
     @InjectRepository(CvEntity)
     private cvRepository: Repository<CvEntity>,
@@ -23,11 +22,15 @@ export class CvService {
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
     private readonly userService: UserService,
-  ) {}
+    ) {}
+    
+    cvAdded() {
+      return pubSub.asyncIterator('cvAdded');
+    }
 
-  async create(createCvInput: CreateCvInput, user : UserEntity) : Promise<CvEntity>{
-    const {skills, ...cvData} = createCvInput;
-    const cv = this.cvRepository.create(cvData);
+    async create(createCvInput: CreateCvInput, user : UserEntity) : Promise<CvEntity>{
+      const {skills, ...cvData} = createCvInput;
+      const cv = this.cvRepository.create(cvData);
     cv.skills = [];
     for (const skill of createCvInput.skills) {
       const skillEntity = await this.skillRepository.findOne({
@@ -45,7 +48,9 @@ export class CvService {
       }
     }
     cv.user = user;
-    return await this.cvRepository.save(cv);
+    const addedCV =  await this.cvRepository.save(cv);
+    pubSub.publish('cvAdded', { cvAdded: addedCV });
+    return addedCV;
   }
 
   
