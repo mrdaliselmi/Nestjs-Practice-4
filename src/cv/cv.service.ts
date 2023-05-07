@@ -23,49 +23,47 @@ export class CvService {
     private userRepository: Repository<UserEntity>,
     private readonly userService: UserService,
     @Inject('PUB_SUB') private pubSub: PubSub,
-    ) {}
+  ) {}
 
-    AllCvNotifications() {
-      return this.pubSub.asyncIterator([SubscriptionType.CV_ADDED, SubscriptionType.CV_UPDATED, SubscriptionType.CV_DELETED]);
-    }
-
-    cvAdded() {
-      return this.pubSub.asyncIterator(SubscriptionType.CV_ADDED);
-    }
-    cvUpdated() {
-      return this.pubSub.asyncIterator(SubscriptionType.CV_UPDATED);
-    }
-    cvDeleted() {
-      return this.pubSub.asyncIterator(SubscriptionType.CV_DELETED);
-    }
-    
-    async create(createCvInput: CreateCvInput, user : UserEntity) : Promise<CvEntity>{
-      const {skills, ...cvData} = createCvInput;
-      const cv = this.cvRepository.create(cvData);
-      cv.skills = [];
-      for (const skill of createCvInput.skills) {
-        const skillEntity = await this.skillRepository.findOne({
-          where: {
-            designation: skill,
-          },
-        });
-        if (skillEntity) {
-          cv.skills.push(skillEntity);
-        } else {
-          const newSkill = this.skillRepository.create();
-          newSkill.designation = skill;
-          await this.skillRepository.save(newSkill);
-          cv.skills.push(newSkill);
-        }
+  AllCvNotifications() {
+    return this.pubSub.asyncIterator([SubscriptionType.CV_ADDED, SubscriptionType.CV_UPDATED, SubscriptionType.CV_DELETED]);
+  }
+  cvAdded() {
+    return this.pubSub.asyncIterator(SubscriptionType.CV_ADDED);
+  }
+  cvUpdated() {
+    return this.pubSub.asyncIterator(SubscriptionType.CV_UPDATED);
+  }
+  cvDeleted() {
+    return this.pubSub.asyncIterator(SubscriptionType.CV_DELETED);
+  }
+  
+  async create(createCvInput: CreateCvInput, user : UserEntity) : Promise<CvEntity>{
+    const {skills, ...cvData} = createCvInput;
+    const cv = this.cvRepository.create(cvData);
+    cv.skills = [];
+    for (const skill of createCvInput.skills) {
+      const skillEntity = await this.skillRepository.findOne({
+        where: {
+          designation: skill,
+        },
+      });
+      if (skillEntity) {
+        cv.skills.push(skillEntity);
+      } else {
+        const newSkill = this.skillRepository.create();
+        newSkill.designation = skill;
+        await this.skillRepository.save(newSkill);
+        cv.skills.push(newSkill);
       }
-      cv.user = user;
-      const addedCV =  await this.cvRepository.save(cv);
-
-      const subscriptionPayload = {title : SubscriptionType.CV_ADDED, ...addedCV };
-      this.pubSub.publish(SubscriptionType.CV_ADDED, subscriptionPayload);
-      
-      return addedCV;
     }
+    cv.user = user;
+    const addedCV =  await this.cvRepository.save(cv);
+    // const subscriptionPayload = {title : SubscriptionType.CV_ADDED, ...addedCV };
+    this.pubSub.publish(SubscriptionType.CV_ADDED, {cvAdded : addedCV});
+    
+    return addedCV;
+  }
 
   
   
@@ -100,9 +98,9 @@ export class CvService {
         const updatedCv =  Object.assign(cv, updateCvInput);
         // console.log(updatedCv)
         const update = await this.cvRepository.save(updatedCv);
-        const payload = {title : SubscriptionType.CV_UPDATED, ...update };
+        // const payload = {title : SubscriptionType.CV_UPDATED, ...update };
         // console.log(payload)
-        this.pubSub.publish(SubscriptionType.CV_UPDATED, payload);
+        this.pubSub.publish(SubscriptionType.CV_UPDATED, {cvUpdated : update});
         return update;
       }
     }
@@ -122,10 +120,11 @@ export class CvService {
     }else{
       if (this.userService.isOwnerOrAdmin(cv, user)) {
         const cvToBeDeleted = {...cv};
-        const removed = await this.cvRepository.remove(cv);
+        
+        await this.cvRepository.remove(cv);
 
         const payload = {title : SubscriptionType.CV_DELETED, ...cvToBeDeleted };
-        this.pubSub.publish(SubscriptionType.CV_DELETED, payload);
+        this.pubSub.publish(SubscriptionType.CV_DELETED, {cvDeleted : cvToBeDeleted});
         
         return {
           ok : true

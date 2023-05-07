@@ -61,26 +61,46 @@ export class CvResolver{
         return await this.cvService.remove(getCvArgs, user);
     }
 
+    // @Subscription(()=>SubscriptionOutput,
+    // {
+    //     filter:(payload,variables)=>{
+    //         return payload.cvNotifications.id === variables.id;
+    //     }
+    // })
+    // cvNotificationsByID(@Args('id') id : number){
+    //     return this.cvService.AllCvNotifications();
+    // }
+
+    // @Subscription(()=>SubscriptionOutput,
+    // {
+    //     filter:(payload,variables)=>{
+    //         return payload.cvNotifications.title === variables.title;
+    //     }
+    // })
+    // cvNotificationsByTitle(@Args('title') title : string){
+    //     return this.cvService.AllCvNotifications();
+    // }
+
     // SUBSCRIPTION CV NOTIFICATIONS
-    @Subscription(()=>SubscriptionOutput)
+    @Subscription(()=>CvEntity)
     cvNotifications(){
         return this.cvService.AllCvNotifications();
     }
 
     // SUBSCRIPTION CV ADDED
-    @Subscription(()=>SubscriptionOutput)
+    @Subscription(()=>CvEntity)
     cvAdded(){
         return this.cvService.cvAdded();
     }
 
     // SUBSCRIPTION CV UPDATED
-    @Subscription(()=>SubscriptionOutput)
+    @Subscription(()=>CvEntity)
     cvUpdated(){
         return this.cvService.cvUpdated();
     }
 
     // SUBSCRIPTION CV DELETED
-    @Subscription(()=>SubscriptionOutput)
+    @Subscription(()=>CvEntity)
     cvDeleted(){
         return this.cvService.cvDeleted();
     }
