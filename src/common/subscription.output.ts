@@ -1,10 +1,40 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { CvEntity } from "src/cv/entities/cv.entity";
+import { SkillEntity } from "src/skill/entities/skill.entity";
+import { UserEntity } from "src/user/entities/user.entity";
 
 @ObjectType()
-export class SubscriptionOutput extends CvEntity {
+export class SubscriptionOutput {
+
     @Field({nullable : true})
     title : string;
+
     @Field(()=>Int, {nullable : true})
-    ok : number;    
+    ok : number;
+
+    @Field(()=>Int,{nullable:true})
+    id : number
+
+    @Field({nullable:true})
+    name : string
+
+    @Field({nullable:true})
+    firstname : string
+
+    @Field(()=>Int,{nullable:true})
+    age : number
+
+    @Field({nullable:true})
+    job : string
+
+    @Field({nullable:true})
+    cin : string
+
+    @Field({nullable:true})
+    path : string
+
+    @Field(()=>UserEntity,{nullable:true})
+    user : UserEntity
+
+    @Field(()=>[SkillEntity],{nullable:true, defaultValue : []})
+    skills : SkillEntity[]
 }

@@ -19,11 +19,11 @@ export class SkillService {
   }
 
   async findAll() {
-    return await this.skillRepository.find();
+    return await this.skillRepository.find({relations : ["cvs"]});
   }
 
   async findOne(getSkillArgs : GetSkillArgs) {
-    const skill = await this.skillRepository.findOne({where : {...getSkillArgs}});
+    const skill = await this.skillRepository.findOne({where : {...getSkillArgs}, relations : ["cvs"]});
     if(!skill) throw new NotFoundException(`skill of id ${getSkillArgs.id} not found`);
     return skill;  
   }

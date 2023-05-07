@@ -20,7 +20,7 @@ export class UserService {
     ) {}
         
     async getUser(getUserArgs: GetUserArgs): Promise<UserEntity> {
-        return await this.userRepository.findOne({where:{...getUserArgs}});
+        return await this.userRepository.findOne({where:{...getUserArgs}, relations: ['cvs']});
     }
     async register(userData : RegisterUserInput): Promise<UserEntity> {
         const user = this.userRepository.create({...userData});
@@ -59,7 +59,7 @@ export class UserService {
     }
 
     async getUsers(getUsersArgs: GetUsersArgs){
-        return await this.userRepository.findBy({id: In(getUsersArgs.ids)});
+        return await this.userRepository.find({where: {id: In(getUsersArgs.ids)}, relations: ['cvs']});
     }
 
     isOwnerOrAdmin(object: any, user: UserEntity){

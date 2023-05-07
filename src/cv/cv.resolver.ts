@@ -1,7 +1,6 @@
 import { UseGuards } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver, Subscription } from "@nestjs/graphql";
 import { DeleteOutput } from "src/common/delete.output";
-import { SubscriptionType } from "src/common/subscription-type.enum";
 import { SubscriptionOutput } from "src/common/subscription.output";
 import { CvService } from "src/cv/cv.service";
 import { GetCvArgs } from "src/cv/dto/args/get-cv.args";

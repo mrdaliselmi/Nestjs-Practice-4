@@ -62,9 +62,8 @@ export class CvService {
       const addedCV =  await this.cvRepository.save(cv);
 
       const subscriptionPayload = {title : SubscriptionType.CV_ADDED, ...addedCV };
-      console.log(subscriptionPayload)
-      this.pubSub.publish('cvAdded', subscriptionPayload);
-
+      this.pubSub.publish(SubscriptionType.CV_ADDED, subscriptionPayload);
+      
       return addedCV;
     }
 
