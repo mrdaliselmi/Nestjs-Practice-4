@@ -21,20 +21,19 @@ input CreateSkillInput {
 }
 
 type CvEntity {
-  age: Int!
-  cin: String!
-  firstname: String!
-  id: Int!
-  job: String!
-  name: String!
-  path: String!
+  age: Int
+  cin: String
+  firstname: String
+  id: Int
+  job: String
+  name: String
+  path: String
   skills: [SkillEntity!]
   user: UserEntity
 }
 
 type DeleteOutput {
-  affected: Int!
-  ok: Boolean!
+  ok: Int
 }
 
 input LoginUserInput {
@@ -75,14 +74,39 @@ type SkillEntity {
 }
 
 type Subscription {
-  cvAdded: CvEntity!
+  cvAdded: SubscriptionOutput!
+  cvDeleted: SubscriptionOutput!
+  cvNotifications: SubscriptionOutput!
+  cvUpdated: SubscriptionOutput!
+}
+
+type SubscriptionOutput {
+  age: Int
+  cin: String
+  firstname: String
+  id: Int
+  job: String
+  name: String
+  ok: Int
+  path: String
+  skills: [SkillEntity!]
+  title: String
+  user: UserEntity
 }
 
 input UpdateCvInput {
+  age: Int
+  cin: String
+  firstname: String
   id: Int!
+  job: String
+  name: String
+  path: String
+  skills: [String!]
 }
 
 input UpdateSkillInput {
+  designation: String!
   id: Int!
 }
 

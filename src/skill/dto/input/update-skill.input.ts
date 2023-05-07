@@ -5,4 +5,6 @@ import { CreateSkillInput } from './create-skill.input';
 export class UpdateSkillInput extends PartialType(CreateSkillInput) {
     @Field(()=>Int)
     id : number
+    @Field()
+    designation : string
 }

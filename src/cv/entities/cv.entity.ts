@@ -5,31 +5,31 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 @ObjectType()
 @Entity("cv")
 export class CvEntity {
-    @Field(()=>Int)
+    @Field(()=>Int,{nullable:true})
     @PrimaryGeneratedColumn()
     id : number
 
-    @Field()
+    @Field({nullable:true})
     @Column()
     name : string
 
-    @Field()
+    @Field({nullable:true})
     @Column()
     firstname : string
 
-    @Field(()=>Int)
+    @Field(()=>Int,{nullable:true})
     @Column()
     age : number
 
-    @Field()
+    @Field({nullable:true})
     @Column()
     job : string
 
-    @Field()
+    @Field({nullable:true})
     @Column()
     cin : string
 
-    @Field()
+    @Field({nullable:true})
     @Column()
     path : string
 
@@ -50,6 +50,7 @@ export class CvEntity {
         // {
         //     cascade : true
         // }
+        {onDelete : "CASCADE"}
     )
     @JoinTable()
     skills? : SkillEntity[]

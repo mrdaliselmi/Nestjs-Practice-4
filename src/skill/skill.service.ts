@@ -24,20 +24,21 @@ export class SkillService {
 
   async findOne(getSkillArgs : GetSkillArgs) {
     const skill = await this.skillRepository.findOne({where : {...getSkillArgs}});
-    if(!skill) throw new NotFoundException(`todo of id ${getSkillArgs.id} not found`);
+    if(!skill) throw new NotFoundException(`skill of id ${getSkillArgs.id} not found`);
     return skill;  
   }
 
   async update(updateSkillInput: UpdateSkillInput) {
     const skill = await this.skillRepository.findOne({where : {"id" : updateSkillInput.id}});
-    if(!skill) throw new NotFoundException(`todo of id ${updateSkillInput.id} not found`);
-    return await this.skillRepository.update(updateSkillInput.id, updateSkillInput);
+    if(!skill) throw new NotFoundException(`skill of id ${updateSkillInput.id} not found`);
+    const updatedSkill = await this.skillRepository.update(updateSkillInput.id, updateSkillInput);
+    return {...updatedSkill, ...updateSkillInput};
   }
 
 
   async remove(getSkillArgs: GetSkillArgs) {
     const skill = await this.skillRepository.findOne({where : {...getSkillArgs}});
-    if(!skill) throw new NotFoundException(`todo of id ${getSkillArgs.id} not found`);
+    if(!skill) throw new NotFoundException(`skill of id ${getSkillArgs.id} not found`);
     return {...await this.skillRepository.delete(getSkillArgs.id),
     ok: true};
   }

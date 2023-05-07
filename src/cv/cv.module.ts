@@ -6,6 +6,7 @@ import { SkillEntity } from '../skill/entities/skill.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { CvResolver } from 'src/cv/cv.resolver';
 import { UserModule } from 'src/user/user.module';
+import { PubSub } from 'graphql-subscriptions';
 
 @Module({
   imports: [
@@ -13,6 +14,13 @@ import { UserModule } from 'src/user/user.module';
     UserModule,
   ],
   controllers: [],
-  providers: [CvService, CvResolver]
+  providers: [
+    CvService,
+    CvResolver,     
+    {
+    provide: 'PUB_SUB',
+    useValue: new PubSub(),
+    },
+]
 })
 export class CvModule {}

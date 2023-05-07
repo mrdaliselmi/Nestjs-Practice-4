@@ -1,6 +1,8 @@
 import { UseGuards } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver, Subscription } from "@nestjs/graphql";
 import { DeleteOutput } from "src/common/delete.output";
+import { SubscriptionType } from "src/common/subscription-type.enum";
+import { SubscriptionOutput } from "src/common/subscription.output";
 import { CvService } from "src/cv/cv.service";
 import { GetCvArgs } from "src/cv/dto/args/get-cv.args";
 import { CreateCvInput } from "src/cv/dto/input/create-cv.input";
@@ -60,10 +62,28 @@ export class CvResolver{
         return await this.cvService.remove(getCvArgs, user);
     }
 
+    // SUBSCRIPTION CV NOTIFICATIONS
+    @Subscription(()=>SubscriptionOutput)
+    cvNotifications(){
+        return this.cvService.AllCvNotifications();
+    }
+
     // SUBSCRIPTION CV ADDED
-    @Subscription(()=>CvEntity)
+    @Subscription(()=>SubscriptionOutput)
     cvAdded(){
         return this.cvService.cvAdded();
+    }
+
+    // SUBSCRIPTION CV UPDATED
+    @Subscription(()=>SubscriptionOutput)
+    cvUpdated(){
+        return this.cvService.cvUpdated();
+    }
+
+    // SUBSCRIPTION CV DELETED
+    @Subscription(()=>SubscriptionOutput)
+    cvDeleted(){
+        return this.cvService.cvDeleted();
     }
 
 }

@@ -16,6 +16,7 @@ export class SkillEntity {
     @ManyToMany(
         ()=>CvEntity,
         (cv)=>cv.skills,
+        {onDelete : "CASCADE"}
     )
     cvs : CvEntity[]
 
